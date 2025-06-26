@@ -1,0 +1,152 @@
+/* Mengimpor font 'Press Start 2P' dari Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Press Start 2P', cursive, monospace;
+    color: #FFFFFF; /* Warna teks default untuk body */
+    overflow: hidden; /* Mencegah scrollbar */
+    position: relative; /* Diperlukan untuk penempatan absolut elemen anak */
+}
+
+/* Gaya untuk slideshow latar belakang */
+.slideshow-background {
+    position: fixed; /* Memastikan slideshow menutupi seluruh viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Penting agar gambar yang tidak aktif tidak terlihat di luar viewport */
+    z-index: -1; /* Memastikan slideshow berada di belakang konten lain */
+}
+
+.slides-wrapper {
+    display: flex; /* Mengatur gambar secara horizontal */
+    width: 300%; /* Lebar total wrapper (jumlah gambar * 100%) */
+    height: 100%;
+    transition: transform 1s ease-in-out; /* Transisi halus untuk efek geser */
+}
+
+.slideshow-background img {
+    width: 100vw; /* Setiap gambar mengambil 100% lebar viewport */
+    height: 100%;
+    object-fit: cover; /* Memastikan gambar menutupi area tanpa terdistorsi */
+    flex-shrink: 0; /* Mencegah gambar menyusut */
+}
+
+/* Gaya untuk kontainer utama konten (tombol dan dot navigasi) */
+.main-content-section {
+    display: flex;
+    flex-direction: column; /* Mengatur item secara vertikal */
+    align-items: center; /* Pusatkan item secara horizontal */
+    justify-content: center; /* Pusatkan item secara vertikal */
+    width: 100%;
+    height: 100%;
+    position: absolute; /* Agar bisa diatur z-index dan disembunyikan/ditampilkan */
+    top: 0;
+    left: 0;
+    transition: opacity 0.5s ease; /* Transisi saat section ini disembunyikan/ditampilkan */
+    z-index: 10; /* PENTING: Pastikan z-index tinggi agar tombol bisa diklik */
+    opacity: 1; /* Pastikan ini terlihat secara default */
+}
+
+/* Gaya untuk kontainer tombol */
+.container {
+    display: flex;
+    gap: 30px; /* Jarak antara tombol */
+    z-index: 1; /* Memastikan tombol berada di atas slideshow */
+}
+
+/* Gaya dasar untuk tombol */
+.main-button {
+    width: 220px;
+    height: 220px;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.2em;
+    font-weight: normal;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box; /* Memastikan padding dan border tidak menambah ukuran total */
+
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3), /* Bayangan utama */
+                0 3px 5px rgba(0, 0, 0, 0.2) inset; /* Bayangan inset untuk kesan timbul */
+    transition: all 0.3s ease; /* Transisi untuk semua properti, termasuk opacity */
+    opacity: 0.7; /* DEFAULT: Tombol sedikit transparan saat tidak di-hover */
+    font-family: 'Press Start 2P', cursive, monospace;
+}
+
+/* Warna spesifik untuk tombol pertama */
+#button1 {
+    background-color: rgba(163, 107, 74, 0.8); /* Cokelat oranye gelap dengan sedikit transparansi */
+    border-bottom: 5px solid rgba(0, 0, 0, 0.3); /* Garis bawah untuk kedalaman */
+    border-right: 5px solid rgba(0, 0, 0, 0.2); /* Garis kanan untuk kedalaman */
+}
+
+/* Warna spesifik untuk tombol kedua */
+#button2 {
+    background-color: rgba(121, 156, 121, 0.8); /* Hijau lumut dengan sedikit transparansi */
+    border-bottom: 5px solid rgba(0, 0, 0, 0.3);
+    border-right: 5px solid rgba(0, 0, 0, 0.2);
+}
+
+/* --- HOVER EFFECT --- */
+
+/* Aturan ini berlaku KETIKA container memiliki anak .main-button yang sedang di-hover. */
+/* Kemudian, dari semua .main-button di dalam container tersebut, pilih yang TIDAK di-hover. */
+.container:has(.main-button:hover) .main-button:not(:hover) {
+    opacity: 0.7; /* Tombol yang tidak di-hover akan sedikit transparan (tetap sama dengan default) */
+}
+
+/* Aturan untuk tombol yang sedang di-hover */
+.main-button:hover {
+    opacity: 1; /* Tombol yang di-hover menjadi sepenuhnya solid */
+    transform: scale(1.1) translateY(-5px); /* Membesar dan mengangkat */
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4),
+                0 6px 10px rgba(0, 0, 0, 0.2) inset;
+    border-bottom: 0px solid rgba(0, 0, 0, 0.3);
+    border-right: 0px solid rgba(0, 0, 0, 0.2);
+}
+
+/* Efek saat tombol ditekan (active) */
+.main-button:active {
+    transform: translateY(0px) scale(1.0);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2),
+                0 2px 3px rgba(0, 0, 0, 0.1) inset;
+}
+
+/* Gaya untuk penanda titik navigasi */
+.dot-navigation {
+    position: absolute;
+    bottom: 20px; /* Posisi di bagian bawah */
+    left: 50%;
+    transform: translateX(-50%); /* Pusatkan secara horizontal */
+    display: flex;
+    gap: 10px; /* Jarak antar titik */
+    z-index: 2; /* Pastikan titik di atas tombol dan slideshow */
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.5); /* Warna titik default (putih transparan) */
+    border-radius: 50%; /* Bentuk lingkaran */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Transisi untuk perubahan gaya */
+    border: 2px solid rgba(255, 255, 255, 0.7); /* Border untuk visibilitas */
+}
+
+.dot.active {
+    background-color: #FFFFFF; /* Warna titik aktif (putih solid) */
+    transform: scale(1.2); /* Sedikit membesar */
+    border: 2px solid #FFFFFF; /* Border solid */
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8); /* Bayangan untuk kesan lebih bold */
+}

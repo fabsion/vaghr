@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages for You</title>
+    <!-- Mengimpor font 'Press Start 2P' dari Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Press Start 2P', cursive, monospace;
+            background-color: #5C7285; /* Biru Keabu-abuan Tua */
+            color: #E2E0C8; /* Krem Pucat */
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .messages-container {
+            background-color: #818C78; /* Hijau Keabu-abuan Sedang */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #E2E0C8; /* Krem Pucat */
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-size: 1em;
+            margin-bottom: 5px;
+            color: #E2E0C8; /* Krem Pucat */
+        }
+
+        input[type="text"] {
+            padding: 10px 15px;
+            border: 2px solid #5C7285; /* Biru Keabu-abuan Tua */
+            border-radius: 8px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1em;
+            background-color: #A7B49E; /* Hijau Keabu-abuan Muda */
+            color: #5C7285; /* Biru Keabu-abuan Tua */
+            width: calc(100% - 30px);
+            max-width: 300px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* Gaya untuk placeholder */
+        input[type="text"]::placeholder {
+            color: rgba(92, 114, 133, 0.7); /* Biru Keabu-abuan Tua transparan */
+        }
+
+        input[type="text"]:focus {
+            border-color: #E2E0C8; /* Krem Pucat */
+        }
+
+        input[type="text"]:disabled {
+            background-color: rgba(167, 180, 158, 0.5); /* Warna lebih redup saat disabled */
+            cursor: not-allowed;
+        }
+
+        button {
+            padding: 15px 30px;
+            background-color: #E2E0C8; /* Krem Pucat */
+            color: #5C7285; /* Biru Keabu-abuan Tua */
+            border: none;
+            border-radius: 10px;
+            font-family: 'Press Start 2P', cursive, monospace;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        button:hover:not(:disabled) { /* Hanya hover jika tidak disabled */
+            background-color: #A7B49E; /* Hijau Keabu-abuan Muda */
+            color: #5C7285; /* Biru Keabu-abuan Tua */
+            transform: translateY(-3px);
+            box-shadow: 0 7px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active:not(:disabled) { /* Hanya active jika tidak disabled */
+            transform: translateY(0px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        button:disabled {
+            background-color: rgba(226, 224, 200, 0.5); /* Warna lebih redup saat disabled */
+            color: rgba(92, 114, 133, 0.7);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #messageDisplay {
+            margin-top: 20px;
+            background-color: rgba(167, 180, 158, 0.3); /* Hijau Keabu-abuan Muda transparan */
+            padding: 20px; /* Sedikit kurangi padding (Diperbarui) */
+            border-radius: 15px;
+            width: 80%; /* Lebar pesan (Diperbarui) */
+            max-width: 400px; /* Max lebar pesan (Diperbarui) */
+            min-height: 120px; /* Tinggi minimum (Diperbarui) */
+            max-height: 250px; /* Tinggi maksimum (Diperbarui) */
+            overflow-y: auto; /* Munculkan scrollbar jika konten melebihi (Diperbarui) */
+            display: flex;
+            /* justify-content: center; */ /* Hapus atau ubah ini */
+            align-items: flex-start; /* Teks mulai dari atas (Diperbarui) */
+            text-align: left; /* Teks rata kiri (Diperbarui) */
+            font-size: 1em; /* Ukuran font (Diperbarui) */
+            color: #E2E0C8; /* Krem Pucat */
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+            box-sizing: border-box;
+        }
+
+        .back-button {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background-color: #E2E0C8; /* Krem Pucat */
+            color: #5C7285; /* Biru Keabu-abuan Tua */
+            border: none;
+            border-radius: 10px;
+            font-family: 'Press Start 2P', cursive, monospace;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-button:hover {
+            background-color: #A7B49E; /* Hijau Keabu-abuan Muda */
+            color: #5C7285; /* Biru Keabu-abuan Tua */
+            transform: translateY(-3px);
+            box-shadow: 0 7px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button:active {
+            transform: translateY(0px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="messages-container">
+        <h2>Messages for You</h2>
+        <label for="userName">Enter your name:</label>
+        <input type="text" id="userName" placeholder="Your Name">
+        <button id="showMessageBtn">Show Message</button>
+        <div id="messageDisplay">
+            <!-- Pesan akan ditampilkan di sini -->
+        </div>
+    </div>
+    <a href="index.html" class="back-button">Back to Home</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userNameInput = document.getElementById('userName');
+            const showMessageBtn = document.getElementById('showMessageBtn');
+            const messageDisplay = document.getElementById('messageDisplay');
+
+            const messages = [
+                "Halo, [Nama]! Semoga harimu menyenangkan dan penuh kebahagiaan.",
+                "Hai [Nama]! Ingatlah, kamu kuat dan mampu melewati segalanya.",
+                "Untuk [Nama]: Dunia ini membutuhkan senyumanmu. Tetaplah bersinar!",
+                "Hai [Nama]! Jangan pernah menyerah pada impianmu. Kamu punya potensi luar biasa.",
+                "Pesan spesial untuk [Nama]: Kamu sangat berharga. Percayalah pada dirimu sendiri.",
+                "Hai [Nama]! Setiap langkah kecil adalah progres. Teruslah melangkah maju.",
+                "Untuk [Nama] yang hebat: Waktu terbaik untuk memulai adalah sekarang.",
+                "Halo [Nama]! Keberanian bukanlah ketiadaan rasa takut, tetapi kemenangan atasnya.",
+                "Halo, [Nama]. Aku tahu kadang hari-hari bisa terasa berat, bahkan buat orang secerah kamu. Tapi coba deh istirahat sejenak, tarik napas, dan lihat ke cermin. Kamu itu cantik, kuat, dan punya daya tarik yang bisa bikin matahari iri. Kalau semesta terasa nggak ramah, ingat... ada aku yang selalu yakin kamu bisa. Dan hey, kalau butuh teman curhat, aku jago dengerin sambil pura-pura ngerti. 😄 Semangat terus ya!",
+                "[Nama], kamu pernah sadar nggak kalau kamu itu kayak kopi pagi? Bikin hati hangat, mata melek, dan bikin kangen kalau sehari aja nggak ketemu. Jadi, kalau lagi capek, jangan mikir kamu sendirian. Aku di sini, siap kasih semangat, bahkan kalau perlu kasih lelucon garing demi liat kamu ketawa. Ingat ya, kamu berhak bahagia, bahkan di hari yang paling absurd sekalipun. Jangan nyerah, cantik.",
+                "Hai [Nama], lagi ngerasa dunia nyebelin? Tenang... kamu bukan satu-satunya. Tapi bedanya, kamu punya senyum yang bisa bikin dunia berhenti bentak-bentak. Kadang hidup emang kayak sinyal WiFi—naik turun, putus nyambung. Tapi jangan biarkan itu bikin kamu ragu sama dirimu sendiri. Kamu hebat, kamu pantas untuk semua hal indah. Dan kalaupun dunia tetap rese, minimal kamu punya aku yang bisa ngasih pelukan virtual dan jokes yang... ya, 50% lucu, 50% garing. 😅",
+                "[Nama], aku nggak tau hari ini kamu ketawa, senyum, atau justru lagi diem mikirin sesuatu. Tapi satu hal yang aku yakin: kamu pantas disemangatin. Dunia mungkin nggak adil, tapi kamu nggak harus ngadepinnya sendirian. Kamu itu unik, cantik, dan punya energi yang luar biasa. Jadi, kalau kamu butuh alasan buat tetap semangat hari ini… ya gimana, masa iya kamu nyerah sebelum ngalahin semua tantangan? Yuk lanjut, karena kamu bisa, [Nama]. Aku percaya itu.",
+                "Untuk [Nama], yang entah lagi senyum atau lagi leyeh-leyeh sambil stalking story orang... please inget satu hal: kamu itu paket lengkap. Cantik iya, pintar iya, dan punya hati yang lembut juga. Kadang kamu suka ngerasa nggak cukup, padahal orang lain bisa iri banget sama kekuatan kamu yang kamu sendiri suka lupa. Jadi, kalau hari ini terasa absurd, anggap aja kayak episode filler—besok pasti lanjut ke plot yang lebih seru. Aku tunggu kamu di sana, tetap semangat ya, bintang kecil!"
+            ];
+
+            let messageShown = false; // Flag untuk melacak apakah pesan sudah ditampilkan
+
+            showMessageBtn.addEventListener('click', function() {
+                if (messageShown) { // Jika pesan sudah ditampilkan, jangan lakukan apa-apa
+                    return;
+                }
+
+                let name = userNameInput.value.trim(); // Ambil nama dan hapus spasi ekstra
+
+                if (name === "") {
+                    name = "Friend"; // Default jika nama kosong
+                }
+
+                const randomIndex = Math.floor(Math.random() * messages.length);
+                let randomMessage = messages[randomIndex];
+
+                // Ganti placeholder [Nama] dengan nama yang dimasukkan
+                randomMessage = randomMessage.replace("[Nama]", name);
+
+                messageDisplay.textContent = randomMessage;
+
+                // Nonaktifkan tombol dan input setelah pesan ditampilkan
+                showMessageBtn.disabled = true;
+                userNameInput.disabled = true;
+                messageShown = true; // Set flag menjadi true
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We're Gonna Be Okay - Lirik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        /* Gaya dasar untuk halaman lirik */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Press Start 2P', cursive, monospace;
+            background-color: #FCFAEE; /* Latar belakang: Putih Gading */
+            color: #333333; /* Warna teks default untuk body */
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto; /* Memungkinkan scroll jika lirik panjang */
+        }
+
+        .lyrics-title {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            color: #DA8359; /* Judul Lagu: Oranye Bata Pastel */
+        }
+
+        .lyrics-artist {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #7B9F6C; /* Nama Artis: Hijau Lumut Tua (Diperbarui) */
+        }
+
+        /* --- Gaya untuk Pemutar Audio Kustom --- */
+        .custom-audio-player {
+            width: 80%;
+            max-width: 600px;
+            background-color: #ECDFCC; /* Warna cream hangat dari palet baru */
+            border-radius: 25px; /* Persegi panjang rounded */
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .play-pause-btn {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: #333333; /* Warna tombol play/pause */
+            padding: 0;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+
+        .play-pause-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            height: 8px;
+            background-color: rgba(0, 0, 0, 0.1); /* Latar belakang progress bar */
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #7B9F6C; /* Warna progres: Hijau Lumut Tua (Diperbarui) */
+            border-radius: 4px;
+        }
+
+        .progress-dot {
+            position: absolute;
+            top: 50%;
+            left: 0%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .progress-dot svg {
+            width: 100%;
+            height: 100%;
+            fill: #FFFFFF; /* Warna awan putih */
+            filter: drop-shadow(0 0 3px rgba(0,0,0,0.2));
+        }
+
+        .time-display {
+            font-size: 0.9em;
+            color: #555555; /* Warna teks waktu */
+            white-space: nowrap;
+        }
+        /* --- Akhir Gaya Pemutar Audio Kustom --- */
+
+        /* --- Gaya untuk Lirik Karaoke yang Diadaptasi --- */
+        .lyrics-display {
+            position: relative; /* Penting untuk positioning content */
+            width: 80%;
+            max-width: 600px;
+            height: 300px; /* Tinggi tetap untuk area lirik */
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Sembunyikan lirik di luar area */
+        }
+
+        .lyrics-content {
+            position: absolute; /* Akan digeser dengan transform */
+            top: 0;
+            left: 0;
+            right: 0;
+            transition: transform 0.5s ease-out; /* Transisi untuk scroll yang halus */
+            padding: 20px 0; /* Padding vertikal agar lirik tidak terlalu mepet atas/bawah */
+            box-sizing: border-box;
+        }
+
+        .lyric-line {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1em;
+            line-height: 1.8;
+            text-align: center;
+            margin: 10px 0; /* Jarak antar baris */
+            font-weight: normal; /* DEFAULT: normal, bukan bold */
+            transition: all 0.3s ease; /* Transisi untuk highlight */
+
+            /* Perbaikan Warna Teks Lirik Default (Tidak Disorot) */
+            -webkit-text-fill-color: rgba(51, 51, 51, 0.4); /* Isi abu-abu gelap transparan */
+            -webkit-text-stroke-width: 1px;
+            -webkit-text-stroke-color: rgba(51, 51, 51, 0.6); /* Stroke abu-abu gelap transparan */
+            color: rgba(51, 51, 51, 0.4); /* Fallback untuk browser non-webkit */
+            opacity: 1; /* Opacity penuh karena warna sudah transparan */
+        }
+
+        .lyric-line.highlighted {
+            opacity: 1; /* Timbul: sepenuhnya terlihat */
+            color: #DA8359; /* Warna highlight: Oranye Bata Pastel */
+            transform: scale(1.05); /* Sedikit membesar */
+            font-weight: bold; /* Menjadi tebal */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Sedikit bayangan untuk timbul */
+
+            /* Warna Teks Lirik Highlight (Diisi Penuh) */
+            -webkit-text-fill-color: #DA8359; /* Isi dengan warna highlight */
+            -webkit-text-stroke-color: #DA8359; /* Stroke juga highlight */
+        }
+        /* --- Akhir Gaya Lirik Karaoke yang Diadaptasi --- */
+
+        .back-button {
+            padding: 15px 30px;
+            background-color: #DA8359; /* Warna tombol kembali: Oranye Bata Pastel */
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Press Start 2P', cursive, monospace;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-button:hover {
+            background-color: #7B9F6C; /* Warna hover tombol kembali: Hijau Lumut Tua (Diperbarui) */
+            transform: translateY(-3px);
+            box-shadow: 0 7px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button:active {
+            transform: translateY(0px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <h2 class="lyrics-title">We're Gonna Be Okay</h2>
+    <h3 class="lyrics-artist">by Cody Francis</h3>
+
+    <div class="custom-audio-player">
+        <button class="play-pause-btn" id="playPauseBtn">▶</button>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+            <div class="progress-dot" id="progressDot">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.0001 10.0001C19.6569 10.0001 21.0001 11.3432 21.0001 13.0001C21.0001 14.6569 19.6569 16.0001 18.0001 16.0001H7.00006C4.79093 16.0001 3.00006 14.2092 3.00006 12.0001C3.00006 9.79097 4.79093 8.0001 7.00006 8.0001C7.00006 5.79097 8.79093 4.0001 11.0001 4.0001C12.9239 4.0001 14.5492 5.3813 14.9082 7.2001C15.6569 7.2001 16.5001 7.4001 17.0001 8.0001C17.5001 8.6001 18.0001 9.3001 18.0001 10.0001Z" />
+                </svg>
+            </div>
+        </div>
+        <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
+        <audio id="songAudio" src="images/CodyFrancisWereGonnaBeOkay.mp3"></audio>
+    </div>
+
+    <div class="lyrics-display" id="lyricsDisplay">
+        <div class="lyrics-content" id="lyricsContent">
+            </div>
+    </div>
+
+    <a href="index.html" class="back-button">Back to Home</a>
+
+    <script>
+        const songAudio = document.getElementById('songAudio');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressDot = document.getElementById('progressDot');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const lyricsDisplay = document.getElementById('lyricsDisplay');
+        const lyricsContent = document.getElementById('lyricsContent');
+
+        // Fungsi untuk format waktu (menit:detik)
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds < 0) return "0:00";
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        }
+
+        // Data lirik dengan timestamp (dalam detik)
+        // PENTING: Sesuaikan waktu ini agar sesuai dengan lagu Anda!
+        // Lirik dimulai pada detik ke-10.
+        const lyricsData = [
+            { time: 10.0, text: "Close your eyes" },
+            { time: 15.0, text: "Get some rest" },
+            { time: 19.5, text: "I'm by your side" },
+            { time: 24.5, text: "Lay your head on my chest" },
+            { time: 32.0, text: "I know you've had" },
+            { time: 34.5, text: "A really bad day" },
+            { time: 41.0, text: "But I'm right here" },
+            { time: 43.0, text: "It's gonna be ok" },
+            { time: 50.0, text: "The world could fall down" },
+            { time: 52.0, text: "It's gonna be ok" },
+            { time: 55.0, text: "The Sun could go out" },
+            { time: 57.0, text: "We're gonna be ok" },
+            { time: 59.0, text: "If all the blue skies fade to grey" },
+            { time: 64.0, text: "We're gonna be ok" },
+            { time: 70.0, text: "Calm your soul" },
+            { time: 75.0, text: "Hold my hand" },
+            { time: 80.0, text: "Don't let go" },
+            { time: 84.0, text: "I understand" },
+            { time: 91.0, text: "I know it hurts" },
+            { time: 94.0, text: "It wasn't fair" },
+            { time: 101.0, text: "It's over now" },
+            { time: 103.0, text: "So don't despair" },
+            { time: 110.0, text: "The world could fall down" },
+            { time: 113.0, text: "It's gonna be ok" },
+            { time: 115.0, text: "The Sun could go out" },
+            { time: 117.0, text: "We're gonna be ok" },
+            { time: 120.0, text: "If all the blue skies fade to grey" },
+            { time: 124.0, text: "We're gonna be ok" },
+            { time: 151.0, text: "The world could fall down" },
+            { time: 153.0, text: "It's gonna be ok" },
+            { time: 155.0, text: "The Sun could go out" },
+            { time: 158.0, text: "We're gonna be ok" },
+            { time: 161.0, text: "If all the blue skies fade to grey" },
+            { time: 165.0, text: "We're gonna be ok" },
+            { time: 172.0, text: "The world could fall down" },
+            { time: 175.0, text: "It's gonna be ok" },
+            { time: 177.0, text: "The Sun could go out" },
+            { time: 180.0, text: "We're gonna be ok" },
+            { time: 182.0, text: "If all the blue skies fade to grey" },
+            { time: 187.0, text: "We're gonna be ok" }
+        ];
+
+        let currentHighlightedLyric = null;
+        let currentLyricIndex = -1;
+
+        function loadLyrics() {
+            lyricsContent.innerHTML = '';
+            lyricsData.forEach((lyric, index) => {
+                const p = document.createElement('p');
+                p.classList.add('lyric-line');
+                p.textContent = lyric.text;
+                p.dataset.time = lyric.time;
+                p.id = `lyric-${index}`;
+                lyricsContent.appendChild(p);
+            });
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            if (songAudio.paused) {
+                songAudio.play();
+                playPauseBtn.textContent = '❚❚';
+            } else {
+                songAudio.pause();
+                playPauseBtn.textContent = '▶';
+            }
+        });
+
+        songAudio.addEventListener('timeupdate', () => {
+            const currentTime = songAudio.currentTime;
+            const duration = songAudio.duration;
+
+            if (!isNaN(duration) && duration > 0) {
+                const progressPercent = (currentTime / duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                progressDot.style.left = `${progressPercent}%`;
+                timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+            } else {
+                timeDisplay.textContent = `${formatTime(currentTime)} / 0:00`;
+            }
+
+            let newLyricIndex = -1;
+            for (let i = 0; i < lyricsData.length; i++) {
+                if (currentTime >= lyricsData[i].time) {
+                    newLyricIndex = i;
+                } else {
+                    break;
+                }
+            }
+
+            if (newLyricIndex !== -1 && newLyricIndex !== currentLyricIndex) {
+                if (currentHighlightedLyric) {
+                    currentHighlightedLyric.classList.remove('highlighted');
+                }
+
+                const newHighlightedLyric = document.getElementById(`lyric-${newLyricIndex}`);
+                if (newHighlightedLyric) {
+                    newHighlightedLyric.classList.add('highlighted');
+                    currentHighlightedLyric = newHighlightedLyric;
+                    currentLyricIndex = newLyricIndex;
+
+                    // Hitung posisi scroll untuk menengahkan lirik yang disorot
+                    const lyricsDisplayHeight = lyricsDisplay.clientHeight;
+                    const lyricLineHeight = newHighlightedLyric.offsetHeight;
+                    const lyricOffsetTop = newHighlightedLyric.offsetTop;
+
+                    // Kita ingin bagian tengah lirik berada di tengah lyricsDisplay
+                    const translateYValue = (lyricsDisplayHeight / 2) - (lyricLineHeight / 2) - lyricOffsetTop;
+
+                    lyricsContent.style.transform = `translateY(${translateYValue}px)`;
+                }
+            } else if (newLyricIndex === -1 && currentHighlightedLyric) {
+                currentHighlightedLyric.classList.remove('highlighted');
+                currentHighlightedLyric = null;
+                currentLyricIndex = -1;
+            }
+        });
+
+        songAudio.addEventListener('ended', () => {
+            playPauseBtn.textContent = '▶'; // Mengubah tombol menjadi play
+            progressBar.style.width = '0%';
+            progressDot.style.left = '0%';
+            songAudio.currentTime = 0; // Mengatur waktu ke 0
+            if (currentHighlightedLyric) {
+                currentHighlightedLyric.classList.remove('highlighted');
+                currentHighlightedLyric = null;
+                currentLyricIndex = -1;
+            }
+            lyricsContent.style.transform = `translateY(0)`; // Kembali ke atas
+        });
+
+        // Hapus atau komentari bagian ini jika Anda tidak ingin lagu memutar otomatis saat halaman dimuat
+        songAudio.addEventListener('canplaythrough', () => {
+            console.log("Audio is ready to play through!");
+            if (!isNaN(songAudio.duration)) {
+                timeDisplay.textContent = `0:00 / ${formatTime(songAudio.duration)}`;
+                // songAudio.play(); // Hapus baris ini agar tidak auto-play
+                // playPauseBtn.textContent = '❚❚'; // Hapus baris ini juga
+            }
+        });
+
+        songAudio.addEventListener('seeked', () => {
+            songAudio.dispatchEvent(new Event('timeupdate'));
+        });
+
+        progressContainer.addEventListener('click', (e) => {
+            const clickX = e.offsetX;
+            const width = progressContainer.offsetWidth;
+            const clickPercent = (clickX / width);
+            songAudio.currentTime = clickPercent * songAudio.duration;
+        });
+
+        loadLyrics();
+    </script>
+</body>
+</html>
